@@ -113,10 +113,10 @@ export default function ImageUpload({ onRecognition, onProcessing, isProcessing 
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          className={`relative border-2 border-dashed rounded-2xl p-16 text-center cursor-pointer transition-all duration-300 bg-gradient-to-br ${
+          className={`relative border-2 border-dashed rounded-2xl p-12 md:p-20 text-center cursor-pointer transition-all duration-300 ${
             isDragging
-              ? "border-accent bg-accent/10 scale-105 shadow-lg"
-              : "border-border hover:border-accent/50 bg-muted/30 hover:bg-accent/5"
+              ? "border-accent bg-accent/15 scale-105 shadow-xl"
+              : "border-accent/30 hover:border-accent/60 bg-gradient-to-br from-accent/5 to-secondary/5 hover:from-accent/10 hover:to-secondary/10"
           }`}
         >
           <input
@@ -126,20 +126,21 @@ export default function ImageUpload({ onRecognition, onProcessing, isProcessing 
             onChange={handleChange}
             className="absolute inset-0 opacity-0 cursor-pointer"
           />
-          <div className="space-y-5">
-            <div className="text-7xl">📤</div>
+          <div className="space-y-6">
+            <div className="text-6xl md:text-8xl">📤</div>
             <div className="space-y-3">
-              <p className="text-xl md:text-2xl font-bold text-foreground">Upload Your Document</p>
-              <p className="text-sm md:text-base text-muted-foreground">Drag and drop or click to select</p>
-              <p className="text-xs md:text-sm text-muted-foreground/70">
-                Images: JPG, PNG, GIF, WebP • Documents: PDF, Word, Excel, TXT
+              <p className="text-2xl md:text-3xl font-semibold text-foreground">Drop your document here</p>
+              <p className="text-base md:text-lg text-muted-foreground">or click to browse</p>
+              <p className="text-xs md:text-sm text-muted-foreground/60">
+                Supports: JPG, PNG, GIF, PDF, Word, Excel, TXT (Max 10MB)
               </p>
             </div>
             <button
               type="button"
-              className="mt-8 px-10 py-4 bg-gradient-to-r from-primary to-secondary text-primary-foreground rounded-xl font-semibold hover:shadow-xl transition-all duration-300 inline-block shadow-lg hover:scale-105 active:scale-95"
+              onClick={() => inputRef.current?.click()}
+              className="mt-6 px-8 py-3 md:py-4 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-lg font-semibold hover:shadow-xl transition-all duration-300 inline-block shadow-lg hover:scale-105 active:scale-95 text-base md:text-lg"
             >
-              Upload Files
+              Select Files
             </button>
           </div>
         </div>
