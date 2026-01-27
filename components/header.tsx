@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import NavMenu from "./nav-menu"
 
 interface HeaderProps {
   onHistoryClick: () => void
@@ -9,51 +9,20 @@ interface HeaderProps {
 }
 
 export default function Header({ onHistoryClick, hasHistory }: HeaderProps) {
-  const pathname = usePathname()
-
-  const isActive = (path: string) => pathname === path
-
   return (
-    <header className="bg-background border-b border-border sticky top-0 z-50">
+    <header className="bg-gradient-to-r from-primary via-primary to-secondary text-primary-foreground py-8 md:py-10 border-b border-border/10">
       <div className="container mx-auto px-4 max-w-7xl">
-        <div className="flex items-center justify-between h-20">
-          <Link href="/" className="hover:opacity-70 transition-opacity">
-            <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-foreground">ClarifAI</h1>
+        <div className="flex items-center justify-between gap-4 md:gap-5">
+          <Link href="/" className="flex items-center gap-4 md:gap-5 hover:opacity-90 transition-opacity">
+            <div className="text-4xl md:text-5xl">✨</div>
+            <div>
+              <h1 className="text-3xl md:text-4xl font-bold tracking-tight">ClarifAI</h1>
+              <p className="text-sm md:text-base opacity-90 font-medium">Intelligent Character Recognition</p>
+            </div>
           </Link>
 
-          {/* Navigation Links */}
-          <nav className="flex items-center gap-8">
-            <Link
-              href="/"
-              className={`font-medium transition-colors ${
-                isActive("/")
-                  ? "text-primary"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Home
-            </Link>
-            <Link
-              href="/gallery"
-              className={`font-medium transition-colors ${
-                isActive("/gallery")
-                  ? "text-primary"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Gallery
-            </Link>
-            <Link
-              href="/settings"
-              className={`font-medium transition-colors ${
-                isActive("/settings")
-                  ? "text-primary"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Settings
-            </Link>
-          </nav>
+          {/* Navigation Buttons */}
+          <NavMenu onHistoryClick={onHistoryClick} hasHistory={hasHistory} />
         </div>
       </div>
     </header>

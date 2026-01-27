@@ -88,28 +88,70 @@ export default function Home() {
       {!originalImage ? (
         <>
           {/* Hero Section */}
-          <section className="py-24 md:py-32 px-4">
-            <div className="container mx-auto max-w-2xl text-center space-y-8">
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-light tracking-tight text-foreground">
-                Transform unclear text into crystal clarity
-              </h1>
-              <p className="text-xl md:text-2xl text-muted-foreground font-light leading-relaxed">
-                Upload any handwritten document or image. Our AI instantly recognizes and extracts every character with precision.
-              </p>
-              <div className="pt-4">
-                <button
-                  onClick={() => document.getElementById("upload-section")?.scrollIntoView({ behavior: "smooth" })}
-                  className="px-8 py-3 text-lg bg-foreground text-background font-medium hover:bg-primary/90 transition-colors"
-                >
-                  Get started
-                </button>
+          <section className="relative overflow-hidden bg-gradient-to-br from-primary/15 via-transparent to-accent/10 py-20 md:py-32">
+            <div className="container mx-auto max-w-5xl px-4">
+              <div className="grid md:grid-cols-2 gap-12 items-center">
+                <div className="space-y-8">
+                  <div className="space-y-4">
+                    <span className="inline-block px-4 py-2 rounded-full bg-primary/20 text-primary font-semibold text-sm">
+                      AI-Powered Recognition
+                    </span>
+                    <h1 className="text-5xl md:text-6xl font-bold text-foreground leading-tight">
+                      Turn handwriting into text instantly
+                    </h1>
+                  </div>
+                  <p className="text-lg text-muted-foreground leading-relaxed">
+                    Upload any handwritten document and let our advanced AI technology extract and digitize the text with remarkable accuracy. No more manual typing.
+                  </p>
+                  <button
+                    onClick={() => document.getElementById("upload-section")?.scrollIntoView({ behavior: "smooth" })}
+                    className="inline-flex px-8 py-4 bg-gradient-to-r from-primary to-accent text-primary-foreground font-semibold rounded-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95"
+                  >
+                    Start Processing
+                  </button>
+                </div>
+                <div className="hidden md:flex items-center justify-center">
+                  <div className="relative w-full h-96 bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl flex items-center justify-center border-2 border-primary/30">
+                    <div className="text-center space-y-4">
+                      <div className="text-6xl">📄</div>
+                      <p className="text-muted-foreground font-medium">Upload documents here</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Features Section */}
+          <section className="py-16 md:py-24 px-4">
+            <div className="container mx-auto max-w-5xl">
+              <div className="grid md:grid-cols-3 gap-8">
+                <div className="space-y-4 p-6 rounded-xl bg-card border border-border hover:border-primary/50 transition-colors">
+                  <div className="text-4xl">⚡</div>
+                  <h3 className="text-xl font-bold text-foreground">Lightning Fast</h3>
+                  <p className="text-muted-foreground">Process documents in seconds with our optimized AI engine</p>
+                </div>
+                <div className="space-y-4 p-6 rounded-xl bg-card border border-border hover:border-accent/50 transition-colors">
+                  <div className="text-4xl">🎯</div>
+                  <h3 className="text-xl font-bold text-foreground">Highly Accurate</h3>
+                  <p className="text-muted-foreground">Advanced recognition with exceptional accuracy rates</p>
+                </div>
+                <div className="space-y-4 p-6 rounded-xl bg-card border border-border hover:border-secondary/50 transition-colors">
+                  <div className="text-4xl">🔒</div>
+                  <h3 className="text-xl font-bold text-foreground">Private & Safe</h3>
+                  <p className="text-muted-foreground">Your documents stay local, never uploaded to servers</p>
+                </div>
               </div>
             </div>
           </section>
 
           {/* Upload Section */}
-          <section id="upload-section" className="py-16 md:py-24 px-4 bg-muted/30">
-            <div className="container mx-auto max-w-2xl">
+          <section id="upload-section" className="py-16 md:py-24 px-4 bg-muted/40">
+            <div className="container mx-auto max-w-3xl">
+              <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-4">Upload Your Document</h2>
+              <p className="text-center text-muted-foreground mb-12 max-w-xl mx-auto">
+                Drag and drop any handwritten document or click to browse
+              </p>
               <ImageUpload
                 onRecognition={handleRecognition}
                 onProcessing={setIsProcessing}
@@ -119,44 +161,50 @@ export default function Home() {
           </section>
 
           {/* How It Works Section */}
-          <section className="py-24 md:py-32 px-4">
-            <div className="container mx-auto max-w-4xl">
-              <h2 className="text-4xl md:text-5xl font-light text-center text-foreground mb-4">How it works</h2>
-              <p className="text-center text-muted-foreground text-lg mb-16">Three simple steps to clarify your documents</p>
-
-              <div className="grid md:grid-cols-3 gap-12 md:gap-8">
-                {/* Step 1 */}
-                <div className="space-y-6 text-center">
-                  <div className="flex justify-center">
-                    <div className="text-5xl font-light text-muted-foreground">01</div>
+          <section className="py-16 md:py-24 px-4">
+            <div className="container mx-auto max-w-5xl">
+              <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-4">How it works</h2>
+              <p className="text-center text-muted-foreground mb-16">Simple three-step process to digitize your documents</p>
+              
+              <div className="grid md:grid-cols-3 gap-8">
+                <div className="relative">
+                  <div className="flex flex-col items-center text-center space-y-6">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold text-2xl">
+                      1
+                    </div>
+                    <h3 className="text-2xl font-bold text-foreground">Upload</h3>
+                    <p className="text-muted-foreground">Select or drag a handwritten document image</p>
                   </div>
-                  <h3 className="text-2xl font-light text-foreground">Upload</h3>
-                  <p className="text-muted-foreground leading-relaxed">Drag and drop any handwritten document or take a photo of your text</p>
+                  {/* Connector line */}
+                  <div className="hidden md:block absolute top-8 left-[calc(100%+0px)] w-8 h-1 bg-gradient-to-r from-primary to-transparent"></div>
                 </div>
 
-                {/* Step 2 */}
-                <div className="space-y-6 text-center">
-                  <div className="flex justify-center">
-                    <div className="text-5xl font-light text-muted-foreground">02</div>
+                <div className="relative">
+                  <div className="flex flex-col items-center text-center space-y-6">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-accent to-secondary flex items-center justify-center text-white font-bold text-2xl">
+                      2
+                    </div>
+                    <h3 className="text-2xl font-bold text-foreground">Process</h3>
+                    <p className="text-muted-foreground">AI analyzes and recognizes all characters</p>
                   </div>
-                  <h3 className="text-2xl font-light text-foreground">Process</h3>
-                  <p className="text-muted-foreground leading-relaxed">Our AI engine analyzes and recognizes every character with high accuracy</p>
+                  <div className="hidden md:block absolute top-8 left-[calc(100%+0px)] w-8 h-1 bg-gradient-to-r from-secondary to-transparent"></div>
                 </div>
 
-                {/* Step 3 */}
-                <div className="space-y-6 text-center">
-                  <div className="flex justify-center">
-                    <div className="text-5xl font-light text-muted-foreground">03</div>
+                <div>
+                  <div className="flex flex-col items-center text-center space-y-6">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-secondary to-primary flex items-center justify-center text-white font-bold text-2xl">
+                      3
+                    </div>
+                    <h3 className="text-2xl font-bold text-foreground">Export</h3>
+                    <p className="text-muted-foreground">Download or copy your digitized text</p>
                   </div>
-                  <h3 className="text-2xl font-light text-foreground">Get Results</h3>
-                  <p className="text-muted-foreground leading-relaxed">View, copy, download, or edit your perfectly extracted text</p>
                 </div>
               </div>
             </div>
           </section>
         </>
       ) : (
-        <div className="container mx-auto max-w-4xl px-4 pt-8 md:pt-12">
+        <div className="container mx-auto max-w-4xl px-4 pt-8 md:pt-12 pb-12">
           <div className="flex gap-6 flex-col lg:flex-row">
             <div className="flex-1 space-y-6">
               <ComparisonDisplay
