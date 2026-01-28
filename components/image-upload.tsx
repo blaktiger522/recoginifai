@@ -113,10 +113,8 @@ export default function ImageUpload({ onRecognition, onProcessing, isProcessing 
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          className={`relative border-2 border-dashed rounded-2xl p-16 text-center cursor-pointer transition-all duration-300 bg-gradient-to-br ${
-            isDragging
-              ? "border-accent bg-accent/10 scale-105 shadow-lg"
-              : "border-border hover:border-accent/50 bg-muted/30 hover:bg-accent/5"
+          className={`relative rounded-2xl p-12 md:p-16 text-center transition-all duration-300 ${
+            isDragging ? "bg-primary/10 scale-105" : "bg-muted/50"
           }`}
         >
           <input
@@ -124,23 +122,75 @@ export default function ImageUpload({ onRecognition, onProcessing, isProcessing 
             type="file"
             accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt"
             onChange={handleChange}
-            className="absolute inset-0 opacity-0 cursor-pointer"
+            className="hidden"
           />
-          <div className="space-y-5">
-            <div className="text-7xl">📤</div>
-            <div className="space-y-3">
-              <p className="text-xl md:text-2xl font-bold text-foreground">Upload Your Document</p>
-              <p className="text-sm md:text-base text-muted-foreground">Drag and drop or click to select</p>
-              <p className="text-xs md:text-sm text-muted-foreground/70">
-                Images: JPG, PNG, GIF, WebP • Documents: PDF, Word, Excel, TXT
-              </p>
+          <div className="space-y-6">
+            {/* Icon */}
+            <div className="flex justify-center">
+              <div className="w-24 h-24 rounded-2xl bg-primary/10 flex items-center justify-center">
+                <svg
+                  className="w-12 h-12 text-primary"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+              </div>
             </div>
-            <button
-              type="button"
-              className="mt-8 px-10 py-4 bg-gradient-to-r from-primary to-secondary text-primary-foreground rounded-xl font-semibold hover:shadow-xl transition-all duration-300 inline-block shadow-lg hover:scale-105 active:scale-95"
-            >
-              Upload Files
-            </button>
+
+            {/* Text */}
+            <div className="space-y-2">
+              <p className="text-2xl md:text-3xl font-bold text-foreground">Upload your document</p>
+              <p className="text-base md:text-lg text-muted-foreground">Drag & drop an image, or use the buttons below</p>
+            </div>
+
+            {/* Buttons */}
+            <div className="flex gap-4 flex-col sm:flex-row pt-2">
+              <button
+                type="button"
+                onClick={() => inputRef.current?.click()}
+                className="flex-1 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                  />
+                </svg>
+                Upload Image
+              </button>
+              <button
+                type="button"
+                className="flex-1 px-6 py-3 bg-muted text-foreground rounded-xl font-semibold hover:bg-muted/80 transition-colors flex items-center justify-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
+                Capture Photo
+              </button>
+            </div>
+
+            {/* Support Text */}
+            <p className="text-sm text-muted-foreground">Supports PNG, JPG, JPEG • Max 10MB</p>
           </div>
         </div>
       ) : (
