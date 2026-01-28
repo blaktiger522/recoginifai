@@ -151,11 +151,11 @@ export default function ImageUpload({ onRecognition, onProcessing, isProcessing 
             </div>
 
             {/* Buttons */}
-            <div className="flex gap-4 flex-col sm:flex-row pt-2">
+            <div className="flex gap-4 flex-col pt-2 w-full">
               <button
                 type="button"
                 onClick={() => inputRef.current?.click()}
-                className="flex-1 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+                className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-xl font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -169,7 +169,8 @@ export default function ImageUpload({ onRecognition, onProcessing, isProcessing 
               </button>
               <button
                 type="button"
-                className="flex-1 px-6 py-3 bg-muted text-foreground rounded-xl font-semibold hover:bg-muted/80 transition-colors flex items-center justify-center gap-2"
+                onClick={() => inputRef.current?.click()}
+                className="w-full px-6 py-3 bg-muted text-foreground rounded-xl font-semibold hover:bg-muted/80 transition-colors flex items-center justify-center gap-2"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
