@@ -1,6 +1,8 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
+import jsPDF from "jspdf"
+import html2canvas from "html2canvas"
 
 interface ComparisonDisplayProps {
   originalImage: string
@@ -21,6 +23,8 @@ export default function ComparisonDisplay({
 }: ComparisonDisplayProps) {
   const [copied, setCopied] = useState(false)
   const [layout, setLayout] = useState<"vertical" | "horizontal">("vertical")
+  const [isDownloading, setIsDownloading] = useState(false)
+  const contentRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const savedLayout = localStorage.getItem("clarifi_layout") as "vertical" | "horizontal" | null
@@ -54,6 +58,113 @@ export default function ComparisonDisplay({
     document.body.appendChild(element)
     element.click()
     document.body.removeChild(element)
+  }
+
+  const downloadPDF = async () => {
+    if (!contentRef.current) return
+
+    setIsDownloading(true)
+    try {
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
+      })
+
+      const pageWidth = pdf.internal.pageSize.getWidth()
+      const pageHeight = pdf.internal.pageSize.getHeight()
+      const margin = 15
+      const contentWidth = pageWidth - margin * 2
+
+      let yPosition = margin
+
+      // Add title
+      pdf.setFontSize(16)
+      pdf.setFont("helvetica", "bold")
+      pdf.text("Document Recognition Report", margin, yPosition)
+      yPosition += 10
+
+      // Add file name and metadata
+      pdf.setFontSize(10)
+      pdf.setFont("helvetica", "normal")
+      pdf.setTextColor(100, 100, 100)
+      pdf.text(`File: ${fileName}`, margin, yPosition)
+      yPosition += 5
+      pdf.text(`Accuracy: ${(confidence * 100).toFixed(1)}%`, margin, yPosition)
+      yPosition += 10
+
+      // Add original image
+      pdf.setFont("helvetica", "bold")
+      pdf.setTextColor(0, 0, 0)
+      pdf.setFontSize(12)
+      pdf.text("Original Document", margin, yPosition)
+      yPosition += 8
+
+      // Convert image to canvas and add to PDF
+      const img = new Image()
+      img.crossOrigin = "anonymous"
+      img.src = originalImage
+
+      await new Promise((resolve) => {
+        img.onload = resolve
+      })
+
+      // Calculate image dimensions to fit in PDF
+      const maxImageHeight = 80
+      const imgAspectRatio = img.width / img.height
+      let imageWidth = contentWidth
+      let imageHeight = imageWidth / imgAspectRatio
+
+      if (imageHeight > maxImageHeight) {
+        imageHeight = maxImageHeight
+        imageWidth = imageHeight * imgAspectRatio
+      }
+
+      const imageX = margin + (contentWidth - imageWidth) / 2
+
+      // Check if we need a new page
+      if (yPosition + imageHeight > pageHeight - margin) {
+        pdf.addPage()
+        yPosition = margin
+      }
+
+      pdf.addImage(originalImage, "JPEG", imageX, yPosition, imageWidth, imageHeight)
+      yPosition += imageHeight + 10
+
+      // Add recognized text section
+      if (yPosition > pageHeight - margin - 20) {
+        pdf.addPage()
+        yPosition = margin
+      }
+
+      pdf.setFont("helvetica", "bold")
+      pdf.setTextColor(0, 0, 0)
+      pdf.setFontSize(12)
+      pdf.text("Recognized Text", margin, yPosition)
+      yPosition += 8
+
+      // Split text to fit in PDF width
+      pdf.setFont("helvetica", "normal")
+      pdf.setFontSize(10)
+      const textLines = pdf.splitTextToSize(recognizedText, contentWidth)
+
+      // Add text with pagination
+      textLines.forEach((line: string) => {
+        if (yPosition > pageHeight - margin - 5) {
+          pdf.addPage()
+          yPosition = margin
+        }
+        pdf.text(line, margin, yPosition)
+        yPosition += 6
+      })
+
+      // Save PDF
+      pdf.save(`${fileName.replace(/\.[^/.]+$/, "")}_recognized.pdf`)
+    } catch (error) {
+      console.error("Error generating PDF:", error)
+    } finally {
+      setIsDownloading(false)
+    }
   }
 
   return (
@@ -176,6 +287,13 @@ export default function ComparisonDisplay({
           className="flex-1 py-4 px-6 bg-muted text-foreground rounded-xl font-semibold hover:bg-muted/80 transition-all duration-300 border border-border hover:shadow-md"
         >
           Download Text
+        </button>
+        <button
+          onClick={downloadPDF}
+          disabled={isDownloading}
+          className="flex-1 py-4 px-6 bg-muted text-foreground rounded-xl font-semibold hover:bg-muted/80 transition-all duration-300 border border-border hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isDownloading ? "Generating PDF..." : "Download PDF"}
         </button>
         <button
           onClick={copyToClipboard}
