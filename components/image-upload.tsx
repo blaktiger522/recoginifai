@@ -163,23 +163,8 @@ export default function ImageUpload({ onRecognition, onProcessing, isProcessing 
             <div className="flex gap-4 flex-col pt-2 w-full">
               <button
                 type="button"
-                onClick={() => inputRef.current?.click()}
-                className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-xl font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                  />
-                </svg>
-                Upload Image
-              </button>
-              <button
-                type="button"
                 onClick={() => cameraRef.current?.click()}
-                className="w-full px-6 py-3 bg-muted text-foreground rounded-xl font-semibold hover:bg-muted/80 transition-colors flex items-center justify-center gap-2"
+                className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-xl font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -196,6 +181,21 @@ export default function ImageUpload({ onRecognition, onProcessing, isProcessing 
                   />
                 </svg>
                 Capture Photo
+              </button>
+              <button
+                type="button"
+                onClick={() => inputRef.current?.click()}
+                className="w-full px-6 py-3 bg-muted text-foreground rounded-xl font-semibold hover:bg-muted/80 transition-colors flex items-center justify-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                  />
+                </svg>
+                Upload Image
               </button>
             </div>
 
