@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import jsPDF from "jspdf"
 import html2canvas from "html2canvas"
+import { downloadText } from "@/utils/downloadText" // Assuming downloadText is a utility function
 
 interface ComparisonDisplayProps {
   originalImage: string
@@ -50,19 +51,7 @@ export default function ComparisonDisplay({
     setTimeout(() => setCopied(false), 1500)
   }
 
-  const downloadText = () => {
-    const element = document.createElement("a")
-    const file = new Blob([recognizedText], { type: "text/plain" })
-    element.href = URL.createObjectURL(file)
-    element.download = `${fileName.replace(/\.[^/.]+$/, "")}_recognized.txt`
-    document.body.appendChild(element)
-    element.click()
-    document.body.removeChild(element)
-  }
-
   const downloadPDF = async () => {
-    if (!contentRef.current) return
-
     setIsDownloading(true)
     try {
       const pdf = new jsPDF({
@@ -81,58 +70,76 @@ export default function ComparisonDisplay({
       // Add title
       pdf.setFontSize(16)
       pdf.setFont("helvetica", "bold")
+      pdf.setTextColor(0, 0, 0)
       pdf.text("Document Recognition Report", margin, yPosition)
-      yPosition += 10
+      yPosition += 12
 
       // Add file name and metadata
       pdf.setFontSize(10)
       pdf.setFont("helvetica", "normal")
-      pdf.setTextColor(100, 100, 100)
+      pdf.setTextColor(80, 80, 80)
       pdf.text(`File: ${fileName}`, margin, yPosition)
       yPosition += 5
       pdf.text(`Accuracy: ${(confidence * 100).toFixed(1)}%`, margin, yPosition)
-      yPosition += 10
+      yPosition += 12
 
-      // Add original image
+      // Add original image using html2canvas
       pdf.setFont("helvetica", "bold")
       pdf.setTextColor(0, 0, 0)
       pdf.setFontSize(12)
       pdf.text("Original Document", margin, yPosition)
       yPosition += 8
 
-      // Convert image to canvas and add to PDF
-      const img = new Image()
-      img.crossOrigin = "anonymous"
-      img.src = originalImage
+      try {
+        const imgElement = document.createElement("img")
+        imgElement.src = originalImage
+        imgElement.crossOrigin = "anonymous"
 
-      await new Promise((resolve) => {
-        img.onload = resolve
-      })
+        await new Promise<void>((resolve, reject) => {
+          imgElement.onload = () => resolve()
+          imgElement.onerror = () => reject(new Error("Failed to load image"))
+        })
 
-      // Calculate image dimensions to fit in PDF
-      const maxImageHeight = 80
-      const imgAspectRatio = img.width / img.height
-      let imageWidth = contentWidth
-      let imageHeight = imageWidth / imgAspectRatio
+        // Convert image to canvas
+        const canvas = await html2canvas(imgElement, {
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: "#ffffff",
+        })
 
-      if (imageHeight > maxImageHeight) {
-        imageHeight = maxImageHeight
-        imageWidth = imageHeight * imgAspectRatio
+        const imgData = canvas.toDataURL("image/jpeg")
+
+        // Calculate dimensions
+        const maxImageHeight = 70
+        const imgAspectRatio = canvas.width / canvas.height
+        let imageWidth = contentWidth
+        let imageHeight = imageWidth / imgAspectRatio
+
+        if (imageHeight > maxImageHeight) {
+          imageHeight = maxImageHeight
+          imageWidth = imageHeight * imgAspectRatio
+        }
+
+        const imageX = margin + (contentWidth - imageWidth) / 2
+
+        // Check if we need a new page
+        if (yPosition + imageHeight > pageHeight - margin - 20) {
+          pdf.addPage()
+          yPosition = margin
+        }
+
+        pdf.addImage(imgData, "JPEG", imageX, yPosition, imageWidth, imageHeight)
+        yPosition += imageHeight + 12
+      } catch (imgError) {
+        console.error("[v0] Error processing image:", imgError)
+        pdf.setFontSize(10)
+        pdf.setTextColor(200, 0, 0)
+        pdf.text("(Image could not be included)", margin, yPosition)
+        yPosition += 10
       }
-
-      const imageX = margin + (contentWidth - imageWidth) / 2
-
-      // Check if we need a new page
-      if (yPosition + imageHeight > pageHeight - margin) {
-        pdf.addPage()
-        yPosition = margin
-      }
-
-      pdf.addImage(originalImage, "JPEG", imageX, yPosition, imageWidth, imageHeight)
-      yPosition += imageHeight + 10
 
       // Add recognized text section
-      if (yPosition > pageHeight - margin - 20) {
+      if (yPosition > pageHeight - margin - 30) {
         pdf.addPage()
         yPosition = margin
       }
@@ -146,6 +153,7 @@ export default function ComparisonDisplay({
       // Split text to fit in PDF width
       pdf.setFont("helvetica", "normal")
       pdf.setFontSize(10)
+      pdf.setTextColor(0, 0, 0)
       const textLines = pdf.splitTextToSize(recognizedText, contentWidth)
 
       // Add text with pagination
@@ -159,9 +167,11 @@ export default function ComparisonDisplay({
       })
 
       // Save PDF
-      pdf.save(`${fileName.replace(/\.[^/.]+$/, "")}_recognized.pdf`)
+      const cleanFileName = fileName.replace(/\.[^/.]+$/, "")
+      pdf.save(`${cleanFileName}_recognized.pdf`)
+      console.log("[v0] PDF downloaded successfully")
     } catch (error) {
-      console.error("Error generating PDF:", error)
+      console.error("[v0] Error generating PDF:", error)
     } finally {
       setIsDownloading(false)
     }
@@ -283,7 +293,7 @@ export default function ComparisonDisplay({
           New Upload
         </button>
         <button
-          onClick={downloadText}
+          onClick={() => downloadText(recognizedText)}
           className="flex-1 py-4 px-6 bg-muted text-foreground rounded-xl font-semibold hover:bg-muted/80 transition-all duration-300 border border-border hover:shadow-md"
         >
           Download Text
